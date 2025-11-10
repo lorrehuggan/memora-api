@@ -11,7 +11,8 @@
     "paths": {
       "@/lib/*": ["src/lib/*"],
       "@/middleware/*": ["src/middleware/*"],
-      "@/routes/*": ["src/routes/*"]
+      "@/routes/*": ["src/routes/*"],
+      "@/utils/*": ["src/lib/utils/*"]
     }
   }
 }
