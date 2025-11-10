@@ -1,16 +1,9 @@
-import {
-  boolean,
-  index,
-  pgSchema,
-  text,
-  timestamp,
-  uuid,
-} from "drizzle-orm/pg-core";
+import { boolean, index, pgSchema, text, timestamp } from "drizzle-orm/pg-core";
 
 export const auth = pgSchema("bauth");
 
-export const users = auth.table("users", {
-  id: uuid("id").primaryKey(),
+export const user = auth.table("user", {
+  id: text("id").primaryKey(),
   name: text("name").notNull(),
   email: text("email").notNull().unique(),
   emailVerified: boolean("email_verified").default(false).notNull(),
@@ -22,10 +15,10 @@ export const users = auth.table("users", {
     .notNull(),
 });
 
-export const sessions = auth.table(
-  "sessions",
+export const session = auth.table(
+  "session",
   {
-    id: uuid("id").primaryKey(),
+    id: text("id").primaryKey(),
     expiresAt: timestamp("expires_at").notNull(),
     token: text("token").notNull().unique(),
     createdAt: timestamp("created_at").defaultNow().notNull(),
@@ -34,9 +27,9 @@ export const sessions = auth.table(
       .notNull(),
     ipAddress: text("ip_address"),
     userAgent: text("user_agent"),
-    userId: uuid("user_id")
+    userId: text("user_id")
       .notNull()
-      .references(() => users.id, { onDelete: "cascade" }),
+      .references(() => user.id, { onDelete: "cascade" }),
   },
   table => [
     index("session_user_id_idx").on(table.userId),
@@ -47,12 +40,12 @@ export const sessions = auth.table(
 export const account = auth.table(
   "account",
   {
-    id: uuid("id").primaryKey(),
+    id: text("id").primaryKey(),
     accountId: text("account_id").notNull(),
     providerId: text("provider_id").notNull(),
-    userId: uuid("user_id")
+    userId: text("user_id")
       .notNull()
-      .references(() => users.id, { onDelete: "cascade" }),
+      .references(() => user.id, { onDelete: "cascade" }),
     accessToken: text("access_token"),
     refreshToken: text("refresh_token"),
     idToken: text("id_token"),
@@ -75,7 +68,7 @@ export const account = auth.table(
 export const verification = auth.table(
   "verification",
   {
-    id: uuid("id").primaryKey(),
+    id: text("id").primaryKey(),
     identifier: text("identifier").notNull(),
     value: text("value").notNull(),
     expiresAt: timestamp("expires_at").notNull(),

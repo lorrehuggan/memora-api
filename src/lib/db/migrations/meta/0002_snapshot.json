@@ -1,6 +1,6 @@
 {
-  "id": "70b70bf0-8543-4c2a-90f7-bdc75ddb8783",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "2272b5e1-0def-4b46-916c-0f740d0c204d",
+  "prevId": "6686586d-de3c-466e-a219-7adf668fec98",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -142,10 +142,10 @@
         }
       },
       "foreignKeys": {
-        "account_user_id_users_id_fk": {
-          "name": "account_user_id_users_id_fk",
+        "account_user_id_user_id_fk": {
+          "name": "account_user_id_user_id_fk",
           "tableFrom": "account",
-          "tableTo": "users",
+          "tableTo": "user",
           "schemaTo": "bauth",
           "columnsFrom": [
             "user_id"
@@ -163,8 +163,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "bauth.sessions": {
-      "name": "sessions",
+    "bauth.session": {
+      "name": "session",
       "schema": "bauth",
       "columns": {
         "id": {
@@ -250,10 +250,10 @@
         }
       },
       "foreignKeys": {
-        "sessions_user_id_users_id_fk": {
-          "name": "sessions_user_id_users_id_fk",
-          "tableFrom": "sessions",
-          "tableTo": "users",
+        "session_user_id_user_id_fk": {
+          "name": "session_user_id_user_id_fk",
+          "tableFrom": "session",
+          "tableTo": "user",
           "schemaTo": "bauth",
           "columnsFrom": [
             "user_id"
@@ -267,8 +267,8 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "sessions_token_unique": {
-          "name": "sessions_token_unique",
+        "session_token_unique": {
+          "name": "session_token_unique",
           "nullsNotDistinct": false,
           "columns": [
             "token"
@@ -279,8 +279,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "bauth.users": {
-      "name": "users",
+    "bauth.user": {
+      "name": "user",
       "schema": "bauth",
       "columns": {
         "id": {
@@ -333,8 +333,8 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "users_email_unique": {
-          "name": "users_email_unique",
+        "user_email_unique": {
+          "name": "user_email_unique",
           "nullsNotDistinct": false,
           "columns": [
             "email"
@@ -442,6 +442,369 @@
         }
       },
       "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.entry": {
+      "name": "entry",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "file_path": {
+          "name": "file_path",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "file_size": {
+          "name": "file_size",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "file_duration": {
+          "name": "file_duration",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "public_url": {
+          "name": "public_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "bucket": {
+          "name": "bucket",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "original_file_name": {
+          "name": "original_file_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "language": {
+          "name": "language",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'en'"
+        },
+        "source_language": {
+          "name": "source_language",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'mobile'"
+        },
+        "audio_uri": {
+          "name": "audio_uri",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "audio_duration": {
+          "name": "audio_duration",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "processing_status": {
+          "name": "processing_status",
+          "type": "entry_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'processing'"
+        },
+        "transcript": {
+          "name": "transcript",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "is_private": {
+          "name": "is_private",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": true
+        }
+      },
+      "indexes": {
+        "entry_user_id_idx": {
+          "name": "entry_user_id_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "entry_user_id_user_id_fk": {
+          "name": "entry_user_id_user_id_fk",
+          "tableFrom": "entry",
+          "tableTo": "user",
+          "schemaTo": "bauth",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.entry_analysis": {
+      "name": "entry_analysis",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "entry_id": {
+          "name": "entry_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "transcript_conf": {
+          "name": "transcript_conf",
+          "type": "numeric(4, 3)",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'0'"
+        },
+        "sentiment_score": {
+          "name": "sentiment_score",
+          "type": "numeric(4, 3)",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'0'"
+        },
+        "mood": {
+          "name": "mood",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "tone": {
+          "name": "tone",
+          "type": "text[]",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "ARRAY[]::text[]"
+        }
+      },
+      "indexes": {
+        "entry_analysis_entry_id_idx": {
+          "name": "entry_analysis_entry_id_idx",
+          "columns": [
+            {
+              "expression": "entry_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "entry_analysis_entry_id_entry_id_fk": {
+          "name": "entry_analysis_entry_id_entry_id_fk",
+          "tableFrom": "entry_analysis",
+          "tableTo": "entry",
+          "columnsFrom": [
+            "entry_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.entry_transcript": {
+      "name": "entry_transcript",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "entry_id": {
+          "name": "entry_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "transcript": {
+          "name": "transcript",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "language": {
+          "name": "language",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'en'"
+        },
+        "source_language": {
+          "name": "source_language",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'mobile'"
+        },
+        "confidence": {
+          "name": "confidence",
+          "type": "numeric(4, 3)",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'0'"
+        }
+      },
+      "indexes": {
+        "entry_transcript_entry_id_idx": {
+          "name": "entry_transcript_entry_id_idx",
+          "columns": [
+            {
+              "expression": "entry_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "entry_transcript_entry_id_entry_id_fk": {
+          "name": "entry_transcript_entry_id_entry_id_fk",
+          "tableFrom": "entry_transcript",
+          "tableTo": "entry",
+          "columnsFrom": [
+            "entry_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},

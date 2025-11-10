@@ -1,6 +1,6 @@
 {
-  "id": "70b70bf0-8543-4c2a-90f7-bdc75ddb8783",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "6686586d-de3c-466e-a219-7adf668fec98",
+  "prevId": "70b70bf0-8543-4c2a-90f7-bdc75ddb8783",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -142,10 +142,10 @@
         }
       },
       "foreignKeys": {
-        "account_user_id_users_id_fk": {
-          "name": "account_user_id_users_id_fk",
+        "account_user_id_user_id_fk": {
+          "name": "account_user_id_user_id_fk",
           "tableFrom": "account",
-          "tableTo": "users",
+          "tableTo": "user",
           "schemaTo": "bauth",
           "columnsFrom": [
             "user_id"
@@ -163,8 +163,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "bauth.sessions": {
-      "name": "sessions",
+    "bauth.session": {
+      "name": "session",
       "schema": "bauth",
       "columns": {
         "id": {
@@ -250,10 +250,10 @@
         }
       },
       "foreignKeys": {
-        "sessions_user_id_users_id_fk": {
-          "name": "sessions_user_id_users_id_fk",
-          "tableFrom": "sessions",
-          "tableTo": "users",
+        "session_user_id_user_id_fk": {
+          "name": "session_user_id_user_id_fk",
+          "tableFrom": "session",
+          "tableTo": "user",
           "schemaTo": "bauth",
           "columnsFrom": [
             "user_id"
@@ -267,8 +267,8 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "sessions_token_unique": {
-          "name": "sessions_token_unique",
+        "session_token_unique": {
+          "name": "session_token_unique",
           "nullsNotDistinct": false,
           "columns": [
             "token"
@@ -279,8 +279,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "bauth.users": {
-      "name": "users",
+    "bauth.user": {
+      "name": "user",
       "schema": "bauth",
       "columns": {
         "id": {
@@ -333,8 +333,8 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "users_email_unique": {
-          "name": "users_email_unique",
+        "user_email_unique": {
+          "name": "user_email_unique",
           "nullsNotDistinct": false,
           "columns": [
             "email"
