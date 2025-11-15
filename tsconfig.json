@@ -12,7 +12,10 @@
       "@/lib/*": ["src/lib/*"],
       "@/middleware/*": ["src/middleware/*"],
       "@/routes/*": ["src/routes/*"],
-      "@/utils/*": ["src/lib/utils/*"]
+      "@/utils/*": ["src/lib/utils/*"],
+      "@/services/*": ["src/lib/services/*"],
+      "@/types/*": ["src/types/*"],
+      "@/db/*": ["src/lib/services/db/*"]
     }
   }
 }
