@@ -1,13 +1,13 @@
 import { $ } from "bun";
 import { Hono } from "hono";
 
+import { ReflectionsService } from "@/lib/services/data/entryService";
 import { openai } from "@/services/ai/client";
 import {
   ANALYZER_SYSTEM_PROMPT,
   TRANSCRIBER_SYSTEM_PROMPT,
 } from "@/services/ai/prompts/refelctions";
 import { auth } from "@/services/auth";
-import { ReflectionsService } from "@/services/data/refelections";
 import { uploadReflectionToS3 } from "@/services/s3/uploadReflection";
 import { AnalyserOutput } from "@/types/reflections";
 import { generateSecureRandomString } from "@/utils/generateSecureRandomString";
