@@ -1,6 +1,6 @@
 import type { Context, MiddlewareHandler } from "hono";
 
-import { auth } from "@/lib/auth";
+import { auth } from "@/services/auth";
 
 export const authMiddleware: MiddlewareHandler<{
   Variables: {

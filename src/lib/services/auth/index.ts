@@ -1,8 +1,8 @@
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 
-import { db } from "./db/client";
-import * as authSchema from "./db/schema/auth";
+import { db } from "@/services/db/client";
+import * as authSchema from "@/services/db/schema/auth";
 
 export const auth = betterAuth({
   baseURL: process.env.BETTER_AUTH_URL ?? "http://localhost:3000",
