@@ -49,7 +49,7 @@ export interface ScoresObject {
 }
 
 // Root payload
-export interface AnalyzerOutput {
+export interface AnalyserOutput {
   meta: {
     language: string; // BCP-47 (e.g., "en")
     wordCount: number;
@@ -184,3 +184,23 @@ export interface DbAnalysisRecord {
   transcriptConf: number | null;
   sentimentScore: number | null;
 }
+
+export type CreateEntryParams = {
+  userId: string;
+  title?: string;
+  description?: string;
+  filePath: string;
+  publicUrl: string;
+  bucket?: string;
+  originalFileName: string;
+  fileSize?: number;
+  fileMimeType?: string;
+  fileDuration?: number;
+  participantCount?: number;
+  tags?: string[];
+};
+
+export type CreateEntryTranscriptParams = {
+  entryId: string;
+  transcript: string;
+};

@@ -1,12 +1,16 @@
 import { $ } from "bun";
 import { Hono } from "hono";
 
-import { auth } from "@/lib/auth";
-import { openai } from "@/lib/services/ai/client";
-import { TRANSCRIBER_SYSTEM_PROMPT } from "@/lib/services/ai/prompts/refelctions";
-import { ReflectionsService } from "@/lib/services/data/refelections";
-import { uploadReflectionToS3 } from "@/lib/services/s3/uploadReflection";
-import { generateSecureRandomString } from "@/lib/utils/generateSecureRandomString";
+import { openai } from "@/services/ai/client";
+import {
+  ANALYZER_SYSTEM_PROMPT,
+  TRANSCRIBER_SYSTEM_PROMPT,
+} from "@/services/ai/prompts/refelctions";
+import { auth } from "@/services/auth";
+import { ReflectionsService } from "@/services/data/refelections";
+import { uploadReflectionToS3 } from "@/services/s3/uploadReflection";
+import { AnalyserOutput } from "@/types/reflections";
+import { generateSecureRandomString } from "@/utils/generateSecureRandomString";
 
 const app = new Hono<{
   Variables: {
@@ -86,23 +90,46 @@ app.post("/create", async c => {
         text: transcription.text,
       });
     }
+    const analysis = await openai.responses.create({
+      input: transcription.text,
+      instructions: ANALYZER_SYSTEM_PROMPT,
+      model: "gpt-4.1-mini",
+    });
+    if (process.env.NODE_ENV === "development") {
+      // eslint-disable-next-line no-console
+      console.log("Analysis completed:", {
+        success: true,
+        output: analysis.output,
+      });
+    }
+
+    const analysisOutput = JSON.parse(
+      analysis.output_text
+    ) as unknown as AnalyserOutput;
+
     const { filePath, publicUrl } = await uploadReflectionToS3(
       convertedFile,
       convertedFileName
     );
 
-    const relflectionRecord = await ReflectionsService.createReflection({
+    const relflectionRecord = await ReflectionsService.createEntry({
       userId: user,
       filePath,
       publicUrl,
       originalFileName: file.name,
     });
 
-    const reflectionTranscript =
-      await ReflectionsService.createReflectionTranscript({
+    const reflectionTranscript = await ReflectionsService.createEntryTranscript(
+      {
         entryId: relflectionRecord.id,
         transcript: transcription.text,
-      });
+      }
+    );
+
+    await ReflectionsService.createEntryAnalysis(
+      analysisOutput,
+      relflectionRecord.id
+    );
 
     return c.json({
       success: true,
@@ -110,6 +137,9 @@ app.post("/create", async c => {
     });
   } catch (error) {
     console.error(error);
+    return c.json({
+      success: false,
+    });
   }
 });
 
